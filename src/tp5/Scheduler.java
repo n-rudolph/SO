@@ -21,18 +21,30 @@ public class Scheduler {
     }
 
     public void run(){
-        Run run = startSimulation();
+        startSimulation();
         while(all.size()>0){
             changeToReady();
-
+            Run next = alg.nextProcess();
+            updateTime(next.duration);
+            changeToCompleted();
+            clock += next.duration;
         }
     }
 
-    public Run startSimulation(){
-        Run run = getFirstProcess();
-        clock=clock+run.duration;
-        updateTime(run.duration);
-       return run;
+    private void changeToCompleted() {
+        for (Process process : all) {
+            if (process.isCompleted()){
+                process.setState(Process.State.COMPLETED);
+                completed.add(process);
+                all.remove(process);
+            }
+        }
+    }
+
+    public void startSimulation(){
+        Process minTimeProcess = getFirstProcess();
+        clock = clock + minTimeProcess.getArrivalTime();
+        updateTime(clock);
     }
 
     private void changeToReady() {
@@ -43,19 +55,19 @@ public class Scheduler {
         }
     }
 
-    private Run getFirstProcess(){
+    private Process getFirstProcess(){
         Process aux = new Process(0, 0, 10000, null);
         for (Process process : all) {
             if (process.getArrivalTime()<aux.getArrivalTime()){
                 aux=process;
             }
         }
-        return new Run(aux, aux.getArrivalTime());
+        return aux;
     }
 
     private void updateTime(int time) {
         for (Process process : all) {
-            process.updateArrivalTime(time);
+            process.updateTime(time);
         }
     }
 

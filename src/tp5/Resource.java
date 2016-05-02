@@ -6,4 +6,8 @@ package tp5;
 public enum Resource {
     CPU, IO;
     public int time;
+
+    public void updateTime(int time) {
+        this.time-=time;
+    }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by rudy on 02/05/16.
  */
-public class Process{
+public class Process {
     private List<RunInterval> runIntervals;
     private int id;
     private int priority;
@@ -28,27 +28,62 @@ public class Process{
         this.runIntervals = runIntervals;
     }
 
-    public void updateArrivalTime(int time){
-        if (arrivalTime<=0){
-            return;
+    public void updateTime(int time) {
+        switch (state) {
+            case PENDING:
+                if (arrivalTime <= 0)
+                    arrivalTime -= time;
+                break;
+            case BLOCKED:
+                for (Resource resource : resources) {
+                    if (resource == Resource.IO && resource.time > 0) {
+                        resource.updateTime(time);
+                        return;
+                    }
+                }
+                break;
+            case RUNNING:
+                for (Resource resource : resources) {
+                    if (resource == Resource.CPU && resource.time > 0) {
+                        resource.updateTime(time);
+                        return;
+                    }
+                }
         }
-        arrivalTime-=time;
+    }
+
+    public boolean changeStateToReady() {
+        if (state == State.PENDING && arrivalTime == 0) {
+            state = State.READY;
+            return true;
+        }
+        return false;
     }
 
     public int getArrivalTime() {
         return arrivalTime;
     }
 
-    public boolean changeStateToReady() {
-        if (state == State.PENDING && arrivalTime == 0){
-            state= State.READY;
-            return true;
+    public boolean isCompleted() {
+        boolean completed = true;
+        if (state != State.COMPLETED){
+            if (arrivalTime > 0){
+                completed=false;
+            } else {
+                for (Resource resource : resources) {
+                    if (resource.time > 0)
+                        completed = false;
+                }
+            }
         }
-        return false;
+        return completed;
     }
 
+    public void setState(State state) {
+        this.state = state;
+    }
 
-    public enum State{
-        PENDING, BLOCKED, READY, COMPLETED;
+    public enum State {
+        PENDING, BLOCKED, READY, COMPLETED, RUNNING
     }
 }
