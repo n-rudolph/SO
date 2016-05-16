@@ -6,4 +6,9 @@ package tp5;
 public class RunInterval {
     public int start;
     public int end;
+
+    public RunInterval(int start, int end) {
+        this.start=start;
+        this.end =end;
+    }
 }

@@ -2,6 +2,7 @@ package tp5;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  */
 public class Scheduler {
     private List<Process> all;
-    private List<Process> completed;
+    private List<Process> completed = new ArrayList<Process>();
     private Process running;
 
     private SchedulingAlg alg;
@@ -25,23 +26,30 @@ public class Scheduler {
         while(all.size()>0){
             changeToReady();
             Run next = alg.nextProcess();
-            updateTime(next.duration);
-            changeToCompleted();
-            clock += next.duration;
-        }
-    }
-
-    private void changeToCompleted() {
-        for (Process process : all) {
-            if (process.isCompleted()){
-                process.setState(Process.State.COMPLETED);
-                completed.add(process);
-                all.remove(process);
+            if (next!= null) {
+                next.p.addRunInterval(new RunInterval(clock, clock + next.duration));
+                updateTime(next.duration);
+                changeToCompleted();
+                clock += next.duration;
             }
         }
     }
 
-    public void startSimulation(){
+    private void changeToCompleted() {
+
+        List<Process> aux = new ArrayList<Process>();
+        for (Process process : all) {
+            if (process.isCompleted()){
+                process.setState(Process.State.COMPLETED);
+                completed.add(process);
+            }else {
+                aux.add(process);
+            }
+        }
+        all = aux;
+    }
+
+    private void startSimulation(){
         Process minTimeProcess = getFirstProcess();
         clock = clock + minTimeProcess.getArrivalTime();
         updateTime(clock);
