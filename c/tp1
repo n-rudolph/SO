@@ -1,0 +1,21 @@
+1-
+    gzip             ping
+1:  727 ms             1225 ms
+2:  333 ms             650  ms
+3:  265 ms             400  ms
+4:  205 ms             290  ms
+5:  202 ms             283  ms
+6:  172 ms             270  ms
+7:  175 ms             260  ms
+8:  173 ms             260  ms
+
+En ambos casos se puede ver que a medida que aumenta la cantidad de procesos en paralelo el tiempo de ejecucion disminuye drasticamente. En ambos casos se puede pservar que llega un punto en el que al aumentar la cantidad de procesos en paralelo no mejora el tiempo de ejecucion. En el caso de gzip este estancamiento se da por la cantidad de context switch que ocurren. Mientras que en el caso del ping el estancamiento se da por la limitacion que tiene el dispositiovo I/O ya que se debe esperar a la respuesta de la pagina a la cual se hizo el ping.
+
+2- Para crear procesos el la llamada al sistema es clone.
+clone(child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD,child_tidptr=0x7ff7d84159d0) = 12274
+
+3-
+
+
+4- Si un padre no espera a sus hicos con wait, el control de los hijos se delega a un proceso superior en la jerarquia.
+El parent id del hijo cambia y pasa a ser el del que lo "adopto".
