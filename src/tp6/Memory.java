@@ -1,33 +1,49 @@
 package tp6;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Memory {
 
-    private  Map<Integer, Page> pages;
+    public  List< Page> pages;
     public int maxSize;
     public int accessTime;
 
     public Memory(int maxSize, int accessTime, List<Page> pages){
-        this.pages=new HashMap<Integer, Page>(maxSize);
+        this.pages=new ArrayList<Page>(maxSize);
         this.maxSize=maxSize;
         this.accessTime=accessTime;
 
-        for (Page page : pages) this.pages.put(page.id, page);
+        this.pages=pages;
 
     }
 
     public void addPage(Page p){
-        pages.put(p.id, p);
+        pages.add(p);
     }
 
-    public Page removePAge(int id){
-        return pages.remove(id);
+    public Page removePage(int id){
+        Page toRemove = null;
+        for (Page page : pages) {
+            if (page.id==id)
+                toRemove=page;
+        }
+        if (toRemove!=null) {
+            pages.remove(toRemove);
+            return toRemove;
+        }
+        return null;
     }
 
     public Page getPage(int id){
-        return pages.get(id);
+        if (pages.isEmpty())
+            return null;
+        for (Page page : pages) {
+            if (page.id == id)
+                return page;
+        }
+        return null;
     }
 }

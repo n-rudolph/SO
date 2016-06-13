@@ -2,9 +2,6 @@ package tp6.algorithms;
 
 import tp6.*;
 
-/**
- * Created by rudy on 12/06/16.
- */
 public abstract class PageReplacementAlgorithm {
 
     VirtualMemory virtualMemory;
@@ -19,17 +16,18 @@ public abstract class PageReplacementAlgorithm {
        Page p = memory.getPage(a.page.id);
         if (p!=null){
             onSuccess(a);
-            return new Result(memory.accessTime, false, p);
+            return new Result(memory.accessTime, false, p, a.process);
         }else{
             p = virtualMemory.getPage(a.page.id);
             if (p!=null){
                 onFault(a);
-                return new Result(memory.accessTime+ virtualMemory.accessTime, true, p);
+                return new Result(memory.accessTime+ virtualMemory.accessTime, true, p, a.process);
             }
         }
-       return new Result(0,false, p);
+       return new Result(0,false, p, 0);
     }
     public abstract void onSuccess(Access a);
     public abstract void onFault(Access a);
 
+    public abstract String getName();
 }

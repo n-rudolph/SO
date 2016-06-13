@@ -12,28 +12,38 @@ public class VirtualMemory {
     public int pageSize;
     public int accessTime;
 
-    private Map<Integer, Page> pages;
+    private List<Page> pages;
 
     public VirtualMemory(int size, int pageSize, int accessTime, List<Page> pagesList){
-        pages = new HashMap<Integer, Page>();
+        pages = pagesList;
         this.size=size;
         this.pageSize=pageSize;
         this.accessTime=accessTime;
 
-        for (Page page : pagesList) {
-            pages.put(page.id, page);
-        }
     }
 
     public void addPage(Page p){
-        pages.put(p.id, p);
+        pages.add(p);
     }
 
     public Page removePage(int id){
-        return pages.remove(id);
+        Page toRemove = null;
+        for (Page page : pages) {
+            if (page.id==id)
+                toRemove=page;
+        }
+        if (toRemove!=null) {
+            pages.remove(toRemove);
+            return toRemove;
+        }
+        return null;
     }
 
     public Page getPage(int id ){
-        return pages.get(id);
+        for (Page page : pages) {
+            if (page.id == id)
+                return page;
+        }
+        return null;
     }
 }

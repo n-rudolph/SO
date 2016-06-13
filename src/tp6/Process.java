@@ -8,10 +8,10 @@ import java.util.List;
 public class Process {
 
     public int id;
-    public List<Integer> virtualAddressScape;
+    public List<Page> virtualAddressScace;
 
-    public Process(int id, List<Integer> as){
+    public Process(int id, List<Page> as){
         this.id=id;
-        virtualAddressScape=as;
+        virtualAddressScace=as;
     }
 }

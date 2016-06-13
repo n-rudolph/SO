@@ -7,10 +7,12 @@ public class Result {
     int duration;
     boolean fault;
     Page page;
+    int process;
 
-    public Result(int duration, boolean fault, Page p){
+    public Result(int duration, boolean fault, Page p, int process){
         this.duration=duration;
         this.fault=fault;
         page=p;
+        this.process=process;
     }
 }
